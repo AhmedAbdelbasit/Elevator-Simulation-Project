@@ -30,8 +30,8 @@ public class Building {
         floorsList.add(F);
     }
     
-    public void addElevator(PersonElevator E){
-        personElevatorsList.add(E);
+    public void addElevator(PersonElevator e){
+        personElevatorsList.add(e);
     }
     
     public Brain getBrain(){
@@ -46,5 +46,8 @@ public class Building {
         E.disable();
     }
     
+    public Elevator getElevator(int i){
+        return personElevatorsList.get(i);
+    }
     
 }

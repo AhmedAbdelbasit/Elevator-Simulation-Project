@@ -9,10 +9,15 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.shape.*;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.util.Timer;
+import javafx.scene.paint.Color;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author : Ahmed Abdelbasit Mohamed
@@ -21,49 +26,150 @@ import java.util.Timer;
 
 public class Elevator_Project extends Application {
     
+    public static Brain mainBrain;
+    
+    public static Rectangle Build ;
+    public static Building mainBuilding;
+    public static int buildingWidth = 500;
+    public static int buildingHeight = 450;
+    
+    public static Rectangle[] F ;
+    public static Floor[] FL;
+    public static int floorWidth = buildingWidth -20;
+    public static int numOfFloors = 5;
+    public static int floorHeight = (buildingHeight-20)/numOfFloors;
+    
+    public static Rectangle[] E ;
+    public static PersonElevator[] EL;
+    public static int numOfPersonElevators = 4;
+    public static int elevatorWidth = 40;
+    public static int elevatorHeight = floorHeight*2/3;
+    public static int elevatorCapacity = 5;
+    
+    public static Pane root;
+    public static Scene scene;
+    
+    private static MyTimerTask timerTask;
+    private static Timer timer;
+    
+    public int eState = 0;
+    
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
+                
+        root = new Pane();
+                
+        Build = new Rectangle(10,10,buildingWidth, buildingHeight);
+        root.getChildren().add(Build);
+        
+        F = new Rectangle[numOfFloors];
+        for(int i=0 ; i<numOfFloors ; i++){
+            F[i] = new Rectangle(20,20+i*floorHeight,floorWidth, floorHeight-2);
+            F[i].setFill(Color.WHITE);
+            root.getChildren().add(F[i]);
+        }
+        
+        E = new Rectangle[numOfPersonElevators];
+        for(int i=0 ; i<numOfPersonElevators ; i++){
+            E[i] = new Rectangle(getElevatorX(i),getElevatorY(0),elevatorWidth, elevatorHeight);
+            E[i].setFill(Color.BLUE);
+            root.getChildren().add(E[i]);
+        }
+              
+        timerTask = new MyTimerTask();
+        timer = new Timer(true);
+        timer.scheduleAtFixedRate(timerTask, 0, 50);
+        for(int i=0 ; i< numOfPersonElevators ; i++){
+            timerTask.setTarget(0,i);
+        }
+        
+        Button btnUp = new Button();
+        btnUp.setText("Move Up");
+        btnUp.setLayoutY(buildingHeight + 10);
+        btnUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
+                int T = getElevatorFloor((int)E[eState].getY()) +1;
+                if(T<numOfFloors){
+                    timerTask.setTarget(T, eState);
+                    System.out.println("TimerTask started");
+                }
+                eState += 1;
+                    if(eState == numOfPersonElevators)
+                        eState = 0;
             }
         });
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        Button btnDown = new Button();
+        btnDown.setText("Move Down");
+        btnDown.setLayoutY(buildingHeight + 10);
+        btnDown.setLayoutX(150);
+        btnDown.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                int T = getElevatorFloor((int)E[eState].getY()) -1;
+                if(T>=0){
+                    timerTask.setTarget(T, eState);
+                    System.out.println("TimerTask started");
+                }
+                eState += 1;
+                    if(eState == numOfPersonElevators)
+                        eState = 0;
+            }
+        });
         
-        Scene scene = new Scene(root, 300, 250);
+        root.getChildren().add(btnUp);
+        root.getChildren().add(btnDown);
         
-        primaryStage.setTitle("Hello World!");
+        
+        scene = new Scene(root, 600, 600);
+        
+        primaryStage.setTitle("Elevator Project");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+               
     }
-
+    
+    public static int getElevatorX(int i){
+        return (20+(floorWidth/(numOfPersonElevators+1))*(i+1)-elevatorWidth/2);
+    }
+    
+    public static int getElevatorY(int f){
+        return (20+(numOfFloors)*floorHeight-elevatorHeight);
+    }
+    
+    public static int getElevatorFloor(int y){
+        int floor = numOfFloors - (y/floorHeight) - 1;
+        return floor;
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         
-        Brain mainBrain = new Brain();
-        Building mainBuilding = new Building(mainBrain);
+        mainBrain = new Brain();
+        mainBuilding = new Building(mainBrain);
         int numOfFloors = 10;
         int numOfPersonElevators = 2;
+        int elevatorCapacity = 5;
         
-        for(int i=0; i<numOfFloors ; i++){
-            Floor F = new Floor(mainBuilding, i);
-            mainBuilding.addFloor(F);
-        }
-        
+        EL = new PersonElevator[numOfPersonElevators];
         for(int i=0 ; i<numOfPersonElevators ; i++){
-            Elevator E = new PersonElevator(5);
-            mainBuilding.addElevator(E);
+            System.out.println("new elevator");
+            EL[i] = new PersonElevator(mainBuilding, 0, elevatorCapacity);
+            System.out.println(EL[i].getCapacity());
+            mainBuilding.addElevator(EL[i]);
         }
         
-        launch(args);
+        
+        FL = new Floor[numOfFloors];
+        for(int i=0; i<numOfFloors ; i++){
+            FL[i] = new Floor(mainBuilding, i, numOfPersonElevators);
+            mainBuilding.addFloor(FL[i]);
+        }
+        
+        launch(args); 
     }
-    
 }

@@ -13,9 +13,16 @@ package elevator_project;
 public class PersonElevator extends Elevator {
     private final int personsCapacity;
     
-    public PersonElevator(int capacity){
-        personsCapacity  = capacity;
+    
+    public PersonElevator(Building B, int eNumber, int capacity){
+        setElevatorNumber(eNumber);
+        personsCapacity = capacity;
+        setParentBuilding(B);
     }
+    
+//    public PersonElevator(int capacity){
+//        personsCapacity  = capacity;
+//    }
     
     public int getCapacity(){
         return personsCapacity;

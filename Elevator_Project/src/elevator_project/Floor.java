@@ -22,7 +22,16 @@ public class Floor {
         parentBuilding = B;
         floorNumber = floorNum;
     }    
-   
+    
+    public Floor(Building B, int floorNum,int NumOfElevators){
+        parentBuilding = B;
+        floorNumber = floorNum;
+        for(int i=0; i<NumOfElevators ; i++){
+            ElevatorDoor ED = new ElevatorDoor(this,this.getBuilding().getElevator(i));
+            listOfElevatorDoors.add(ED);
+        }
+    }
+    
     public int getFloorNumber(){
         return floorNumber;
     }
@@ -33,11 +42,11 @@ public class Floor {
     
     public void addKeypad(){
         Keypad K = new Keypad(this);
-        
         listOfKeypads.add(K);
     }
     
-    public void addElevatorDoor(){
-        
+    public void addElevatorDoor(int i){
+        ElevatorDoor ED = new ElevatorDoor(this,this.getBuilding().getElevator(i));
+        listOfElevatorDoors.add(ED);
     }
 }

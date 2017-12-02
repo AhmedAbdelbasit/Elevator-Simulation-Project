@@ -12,10 +12,28 @@ package elevator_project;
 
 public abstract class Elevator implements IObservable{
     
+    private Building parentBuilding;
     private int elevatorNumber;
-    private float currentPosition;
-    private int motionStatus;
+    private float currentPosition = 0;
+    private int motionStatus = 0;
     
+    public Elevator(){
+        
+    }
+    
+    public void setElevatorNumber(int n){
+        elevatorNumber = n;
+    }
+    public int getElevatorNumber(){
+        return elevatorNumber;
+    }
+    
+    public void setParentBuilding(Building B){
+        parentBuilding = B;
+    }
+    public Building getParentBuilding(){
+        return parentBuilding;
+    }
     
     @Override
     public void add(IObserver O){
