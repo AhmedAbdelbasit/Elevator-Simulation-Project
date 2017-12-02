@@ -10,20 +10,20 @@ package elevator_project;
  * emial : ahmed_abdelbasit94@hotmail.com
  */
 
-public class Screen {
-    private final Keypad attachedKeypad;
-    private String currentText;
+public class Request {
+    private final int destinationFloor;
+    private final Keypad keypad;
     
-    public Screen(Keypad K){
-        attachedKeypad = K;
-        currentText = " ";
+    public Request(int destF, Keypad kpad){
+        destinationFloor = destF;
+        keypad = kpad;
     }
     
-    public void setText(String S){
-        currentText = S;
+    public int getDestination(){
+        return destinationFloor;
     }
     
-    public void display(int n){
-        
+    public Keypad getSourceKeypad(){
+        return keypad;
     }
 }

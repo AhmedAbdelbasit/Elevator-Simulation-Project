@@ -10,20 +10,14 @@ package elevator_project;
  * emial : ahmed_abdelbasit94@hotmail.com
  */
 
-public class Screen {
-    private final Keypad attachedKeypad;
-    private String currentText;
+public class PersonElevator extends Elevator {
+    private final int personsCapacity;
     
-    public Screen(Keypad K){
-        attachedKeypad = K;
-        currentText = " ";
+    public PersonElevator(int capacity){
+        personsCapacity  = capacity;
     }
     
-    public void setText(String S){
-        currentText = S;
-    }
-    
-    public void display(int n){
-        
+    public int getCapacity(){
+        return personsCapacity;
     }
 }

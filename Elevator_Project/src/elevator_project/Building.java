@@ -5,10 +5,46 @@
  */
 package elevator_project;
 
+import java.util.ArrayList;
+
 /**
- *
- * @author Poto
+ * @author : Ahmed Abdelbasit Mohamed
+ * emial : ahmed_abdelbasit94@hotmail.com
  */
+
 public class Building {
+    private int buildingID;
+    private ArrayList<Floor> floorsList;
+    private ArrayList<PersonElevator> personElevatorsList;
+    private final Brain brain;
+    
+    public Building(Brain b){
+        brain = b;
+    }
+    
+    public int getBuildingNumber(){
+        return buildingID;
+    }
+    
+    public void addFloor(Floor F){
+        floorsList.add(F);
+    }
+    
+    public void addElevator(PersonElevator E){
+        personElevatorsList.add(E);
+    }
+    
+    public Brain getBrain(){
+        return brain;
+    }
+    
+    public void enableElevator(PersonElevator E){
+        E.enable();
+    }
+    
+    public void disableElevator(PersonElevator E){
+        E.disable();
+    }
+    
     
 }

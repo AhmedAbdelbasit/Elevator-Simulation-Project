@@ -5,10 +5,39 @@
  */
 package elevator_project;
 
+import java.util.ArrayList;
+
 /**
- *
- * @author Poto
+ * @author : Ahmed Abdelbasit Mohamed
+ * emial : ahmed_abdelbasit94@hotmail.com
  */
+
 public class Floor {
+    private final Building parentBuilding;
+    private final int floorNumber;
+    private ArrayList<Keypad> listOfKeypads;
+    private ArrayList<ElevatorDoor> listOfElevatorDoors;
     
+    public Floor(Building B, int floorNum){
+        parentBuilding = B;
+        floorNumber = floorNum;
+    }    
+   
+    public int getFloorNumber(){
+        return floorNumber;
+    }
+    
+    public Building getBuilding(){
+        return parentBuilding;
+    }
+    
+    public void addKeypad(){
+        Keypad K = new Keypad(this);
+        
+        listOfKeypads.add(K);
+    }
+    
+    public void addElevatorDoor(){
+        
+    }
 }

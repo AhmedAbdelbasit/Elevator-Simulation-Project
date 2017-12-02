@@ -6,9 +6,48 @@
 package elevator_project;
 
 /**
- *
- * @author Poto
+ * @author : Ahmed Abdelbasit Mohamed
+ * emial : ahmed_abdelbasit94@hotmail.com
  */
-public abstract class Elevator {
+
+public abstract class Elevator implements IObservable{
+    
+    private int elevatorNumber;
+    private float currentPosition;
+    private int motionStatus;
+    
+    
+    @Override
+    public void add(IObserver O){
+        
+    }
+    
+    @Override
+    public void remove(IObserver O){
+        
+    }
+    
+    @Override
+    public void notifyObservers(){
+        
+    }
+    
+    public void moveTo(int floorNumber){
+        
+    }
+    
+    public void openDoor(){
+        
+    }
+    
+    public void enable(){
+        
+    }
+    
+    public void disable(){
+        
+    }
+    
+    
     
 }

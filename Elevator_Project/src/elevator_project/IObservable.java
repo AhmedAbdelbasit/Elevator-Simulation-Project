@@ -6,9 +6,11 @@
 package elevator_project;
 
 /**
- *
- * @author Poto
+ * @author : Ahmed Abdelbasit Mohamed
+ * emial : ahmed_abdelbasit94@hotmail.com
  */
-public class PersonsElevator extends Elevator {
-    
+public interface IObservable {
+    void add(IObserver O);
+    void remove(IObserver O);
+    void notifyObservers();
 }

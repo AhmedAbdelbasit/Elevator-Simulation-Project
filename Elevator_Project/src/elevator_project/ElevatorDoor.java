@@ -10,5 +10,19 @@ package elevator_project;
  * @author Poto
  */
 public class ElevatorDoor {
+    private final Floor locatedFloor;
+    private final Elevator relatedElevator;
     
+    public ElevatorDoor(Floor F, Elevator E){
+        locatedFloor = F;
+        relatedElevator = E;
+    }
+    
+    public void openDoor(){
+        
+    }
+    
+    public void closeDoor(){
+        
+    }
 }

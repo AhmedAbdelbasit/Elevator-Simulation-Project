@@ -5,10 +5,30 @@
  */
 package elevator_project;
 
+import java.util.ArrayList;
+import java.util.Queue;
+
 /**
  *
  * @author Poto
  */
-public class Brain {
+public class Brain implements IObserver {
+    
+    private Queue<Request> requestsQueue;
+    private ArrayList<Building> buildingsList;
+    
+    @Override
+    public void addStation(IObservable S){
+        
+    }
+    @Override
+    public void removeStation(IObservable S){
+        
+    }
+    @Override
+    public void update(){
+        
+    }
+    
     
 }

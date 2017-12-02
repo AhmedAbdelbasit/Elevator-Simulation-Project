@@ -14,11 +14,11 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import java.util.Timer;
 
-
 /**
- *
- * @author Poto
+ * @author : Ahmed Abdelbasit Mohamed
+ * emial : ahmed_abdelbasit94@hotmail.com
  */
+
 public class Elevator_Project extends Application {
     
     @Override
@@ -47,6 +47,22 @@ public class Elevator_Project extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        Brain mainBrain = new Brain();
+        Building mainBuilding = new Building(mainBrain);
+        int numOfFloors = 10;
+        int numOfPersonElevators = 2;
+        
+        for(int i=0; i<numOfFloors ; i++){
+            Floor F = new Floor(mainBuilding, i);
+            mainBuilding.addFloor(F);
+        }
+        
+        for(int i=0 ; i<numOfPersonElevators ; i++){
+            Elevator E = new PersonElevator(5);
+            mainBuilding.addElevator(E);
+        }
+        
         launch(args);
     }
     
