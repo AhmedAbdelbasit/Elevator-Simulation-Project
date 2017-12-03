@@ -20,10 +20,6 @@ public class PersonElevator extends Elevator {
         setParentBuilding(B);
     }
     
-//    public PersonElevator(int capacity){
-//        personsCapacity  = capacity;
-//    }
-    
     public int getCapacity(){
         return personsCapacity;
     }

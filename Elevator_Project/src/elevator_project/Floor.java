@@ -21,13 +21,18 @@ public class Floor {
     public Floor(Building B, int floorNum){
         parentBuilding = B;
         floorNumber = floorNum;
+        listOfKeypads = new ArrayList();
+        listOfElevatorDoors = new ArrayList();
     }    
     
     public Floor(Building B, int floorNum,int NumOfElevators){
         parentBuilding = B;
         floorNumber = floorNum;
+        listOfKeypads = new ArrayList();
+        listOfElevatorDoors = new ArrayList();
+        ElevatorDoor ED ;
         for(int i=0; i<NumOfElevators ; i++){
-            ElevatorDoor ED = new ElevatorDoor(this,this.getBuilding().getElevator(i));
+            ED = new ElevatorDoor(this,this.getBuilding().getElevator(i));
             listOfElevatorDoors.add(ED);
         }
     }

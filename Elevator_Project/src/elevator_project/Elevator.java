@@ -14,25 +14,38 @@ public abstract class Elevator implements IObservable{
     
     private Building parentBuilding;
     private int elevatorNumber;
-    private float currentPosition = 0;
-    private int motionStatus = 0;
+    private int currentPosition = 0;
+    private char motionStatus = 'i';
+    private int numOfPersonsInside = 0;
     
     public Elevator(){
         
     }
     
-    public void setElevatorNumber(int n){
+    protected void setElevatorNumber(int n){
         elevatorNumber = n;
     }
     public int getElevatorNumber(){
         return elevatorNumber;
     }
     
-    public void setParentBuilding(Building B){
+    protected void setParentBuilding(Building B){
         parentBuilding = B;
     }
     public Building getParentBuilding(){
         return parentBuilding;
+    }
+    
+    public char getStatus(){
+        return motionStatus;
+    }
+    
+    public int getLocation(){
+        return currentPosition;
+    }
+    
+    public int getNumOfPersonsInside(){
+        return numOfPersonsInside;
     }
     
     @Override

@@ -13,5 +13,5 @@ package elevator_project;
 public interface IObserver {
     void addStation(IObservable S);
     void removeStation(IObservable S);
-    void update();
+    void update(IObservable S);
 }
