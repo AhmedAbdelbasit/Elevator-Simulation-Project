@@ -10,19 +10,24 @@ package elevator_project;
  * @author Poto
  */
 import static elevator_project.Elevator_Project.*;
+import java.util.ArrayList;
 
 //import java.util.Date;
 //import java.util.Timer;
 import java.util.TimerTask;
 
 public class MyTimerTask extends TimerTask {
-    private int[] targets;
+    private ArrayList<Integer>[] targets;
     
     public MyTimerTask(){
-        targets = new int[E.length];
+        targets = new ArrayList[E.length];
+        for(int i=0 ; i<E.length ; i++){
+            targets[i] = new ArrayList();
+        }
+        //targets = new ArrayList[E.length];
     }
-    public void setTarget(int x, int e){
-        targets[e] = 20 + (numOfFloors - x)*floorHeight - elevatorHeight;
+    public void addTarget(int x, int e){
+        targets[e].add( 20 + (numOfFloors - x)*floorHeight - elevatorHeight );
     }
     
     @Override
@@ -33,11 +38,15 @@ public class MyTimerTask extends TimerTask {
     private void completeTask() {
         try {
             for(int elevatorNum=0 ; elevatorNum<E.length ; elevatorNum++){
-            double p = E[elevatorNum].getY();
-                if(targets[elevatorNum] > p){
-                    E[elevatorNum].setY(p + 1);
-                }else if(targets[elevatorNum] < p){
-                    E[elevatorNum].setY(p - 1);
+                double p = E[elevatorNum].getY();
+                if(targets[elevatorNum].size() > 0){
+                    if(targets[elevatorNum].get(0) > p){
+                        E[elevatorNum].setY(p + 1);
+                    }else if(targets[elevatorNum].get(0) < p){
+                        E[elevatorNum].setY(p - 1);
+                    }else{
+                        targets[elevatorNum].remove(0);
+                    }
                 }
             }
         } catch (Exception e) {

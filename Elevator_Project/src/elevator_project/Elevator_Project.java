@@ -36,13 +36,13 @@ public class Elevator_Project extends Application {
     
     public static Rectangle[] F ;
     public static int floorWidth = buildingWidth -20;
-    public static int numOfFloors = 8;
+    public static int numOfFloors = 6;
     public static int floorHeight = (buildingHeight-20)/numOfFloors;
     
     public static Rectangle[] E ;
-    public static int numOfPersonElevators = 3;
+    public static int numOfPersonElevators = 5;
     public static int elevatorWidth = 40;
-    public static int elevatorHeight = floorHeight*2/3;
+    public static int elevatorHeight = floorHeight*3/4;
     public static int elevatorCapacity = 5;
     
     public static int keyButtonWidth = 30;
@@ -80,9 +80,9 @@ public class Elevator_Project extends Application {
               
         timerTask = new MyTimerTask();
         timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 50);
+        timer.scheduleAtFixedRate(timerTask, 0, 20);
         for(int i=0 ; i< numOfPersonElevators ; i++){
-            timerTask.setTarget(0,i);
+            timerTask.addTarget(0,i);
         }
         
         Button btnUp = new Button();
@@ -93,7 +93,7 @@ public class Elevator_Project extends Application {
             public void handle(ActionEvent event) {
                 int T = getElevatorFloor((int)E[eState].getY()) +1;
                 if(T<numOfFloors){
-                    timerTask.setTarget(T, eState);
+                    timerTask.addTarget(T, eState);
                     System.out.println("TimerTask started");
                 }
                 eState += 1;
@@ -111,7 +111,7 @@ public class Elevator_Project extends Application {
             public void handle(ActionEvent event) {
                 int T = getElevatorFloor((int)E[eState].getY()) -1;
                 if(T>=0){
-                    timerTask.setTarget(T, eState);
+                    timerTask.addTarget(T, eState);
                     System.out.println("TimerTask started");
                 }
                 eState += 1;
@@ -128,27 +128,32 @@ public class Elevator_Project extends Application {
             for(int i=0 ; i<numOfFloors ; i++){
                 
                 B[j][i] = new Button();
-                B[j][i].setText("" + i);
+                B[j][i].setText("" + (i));
                 B[j][i].setPrefSize(keyButtonWidth, keyButtonHeight);
                 
                 B[j][i].setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        int T = Integer.parseInt(((Button)(event.getSource())).getText()) ;
                         
-                        timerTask.setTarget(T, eState);
+                        int T = getElevatorFloor( (int)((Button)(event.getSource())).getParent().getLayoutY() );
+                        timerTask.addTarget(T, eState);
+                        T = Integer.parseInt(((Button)(event.getSource())).getText()) ;
+                        timerTask.addTarget(T, eState);
                         System.out.println("TimerTask started");
                         
                         eState += 1;
-                        if(eState == numOfPersonElevators)
+                        if(eState == numOfPersonElevators){
                             eState = 0;
+                        }
                     }
                 });
+                if(j!=i){
+                    keypads[j].getChildren().add(B[j][i]);
+                }
                 
-                keypads[j].getChildren().add(B[j][i]);
             }
             keypads[j].setLayoutX(buildingWidth + 20);
-            keypads[j].setLayoutY(20 + j*floorHeight);
+            keypads[j].setLayoutY(20 + (numOfFloors-j-1)*floorHeight);
             root.getChildren().add(keypads[j]);
         }
         
