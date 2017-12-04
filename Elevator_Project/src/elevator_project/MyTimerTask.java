@@ -9,25 +9,36 @@ package elevator_project;
  *
  * @author Poto
  */
-import static elevator_project.Elevator_Project.*;
 import java.util.ArrayList;
 
 //import java.util.Date;
 //import java.util.Timer;
 import java.util.TimerTask;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.Pane;
 
 public class MyTimerTask extends TimerTask {
     private ArrayList<Integer>[] targets;
+    private Building building;
+    private ArrayList<Pane> guiElevatorList;
+    private int nOfElevators;
     
-    public MyTimerTask(){
-        targets = new ArrayList[E.length];
-        for(int i=0 ; i<E.length ; i++){
+    public MyTimerTask(Building B){
+        building  = B;
+        nOfElevators = building.getNumOfElevators();
+        guiElevatorList = new ArrayList();
+        
+        for(int i=0 ; i<nOfElevators ; i++){
+            guiElevatorList.add(((PersonElevator)building.getElevator(i)).getGuiContainer());
+        }
+        targets = new ArrayList[nOfElevators];
+        for(int i=0 ; i<nOfElevators ; i++){
             targets[i] = new ArrayList();
         }
         //targets = new ArrayList[E.length];
     }
     public void addTarget(int x, int e){
-        targets[e].add( 20 + (numOfFloors - x)*floorHeight - elevatorHeight );
+        targets[e].add( 8+ ((building.getNumOfFloors() - x)*(building.getFloorHeight())) - building.getElevatorHeight() );
     }
     
     @Override
@@ -37,13 +48,13 @@ public class MyTimerTask extends TimerTask {
 
     private void completeTask() {
         try {
-            for(int elevatorNum=0 ; elevatorNum<E.length ; elevatorNum++){
-                double p = E[elevatorNum].getY();
+            for(int elevatorNum=0 ; elevatorNum<nOfElevators ; elevatorNum++){
+                double p = guiElevatorList.get(elevatorNum).getLayoutY();
                 if(targets[elevatorNum].size() > 0){
                     if(targets[elevatorNum].get(0) > p){
-                        E[elevatorNum].setY(p + 1);
+                        guiElevatorList.get(elevatorNum).setLayoutY(p + 1);
                     }else if(targets[elevatorNum].get(0) < p){
-                        E[elevatorNum].setY(p - 1);
+                    guiElevatorList.get(elevatorNum).setLayoutY(p-1);
                     }else{
                         targets[elevatorNum].remove(0);
                     }

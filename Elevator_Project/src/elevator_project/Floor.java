@@ -5,7 +5,11 @@
  */
 package elevator_project;
 
+import static elevator_project.Elevator_Project.*;
 import java.util.ArrayList;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
 
 /**
  * @author : Ahmed Abdelbasit Mohamed
@@ -18,11 +22,22 @@ public class Floor {
     private ArrayList<Keypad> listOfKeypads;
     private ArrayList<ElevatorDoor> listOfElevatorDoors;
     
+    private Pane guiFloor;
+    private Pane guiKeypad;
+    
     public Floor(Building B, int floorNum){
         parentBuilding = B;
         floorNumber = floorNum;
         listOfKeypads = new ArrayList();
         listOfElevatorDoors = new ArrayList();
+        
+//        guiFloor = new Rectangle(20,20+floorNum*floorHeight,floorWidth, floorHeight-2);
+        guiFloor = new Pane();
+        Rectangle R = new Rectangle(20,20+floorNum*floorHeight,floorWidth, floorHeight-2);
+        R.setLayoutX(10);
+        R.setFill(Color.WHITE);
+//        guiFloor.setFill(Color.WHITE);
+
     }    
     
     public Floor(Building B, int floorNum,int NumOfElevators){
@@ -35,6 +50,21 @@ public class Floor {
             ED = new ElevatorDoor(this,this.getBuilding().getElevator(i));
             listOfElevatorDoors.add(ED);
         }
+        
+        //        guiFloor = new Rectangle(20,20+floorNum*floorHeight,floorWidth, floorHeight-2);
+        guiFloor = new Pane();
+        guiFloor.setLayoutX(10);
+        guiFloor.setLayoutY(10 + floorNum*floorHeight);
+        Rectangle R = new Rectangle(0,0,floorWidth, floorHeight-2);
+//        R.setLayoutX(10);
+        R.setFill(Color.WHITE);
+        guiFloor.getChildren().add(R);
+//        guiFloor.setFill(Color.WHITE);
+        
+    }
+    
+    public Pane getGuiContainer(){
+        return guiFloor;
     }
     
     public int getFloorNumber(){

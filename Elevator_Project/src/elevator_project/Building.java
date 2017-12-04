@@ -5,7 +5,13 @@
  */
 package elevator_project;
 
+import static elevator_project.Elevator_Project.*;
 import java.util.ArrayList;
+import java.util.Timer;
+
+import javafx.scene.shape.*;
+import javafx.scene.layout.Pane;
+
 
 /**
  * @author : Ahmed Abdelbasit Mohamed
@@ -18,6 +24,12 @@ public class Building {
     private ArrayList<PersonElevator> personElevatorsList;
     private final Brain brain;
     
+    private Pane guiContainer;
+    private Rectangle guiBuilding ;
+    
+    private MyTimerTask timerTask;
+    private Timer timer;
+    
     public Building(Brain b){
         brain = b;
         floorsList = new ArrayList();
@@ -25,10 +37,26 @@ public class Building {
         /**
          * here, register the building in the brain
          */ 
+        
+        /**
+         * GUI Code
+         */
+        guiContainer = new Pane();
+        guiContainer.setLayoutX(10);
+        guiContainer.setLayoutY(10);
+        guiBuilding = new Rectangle(10,10,buildingWidth, buildingHeight);
+        guiContainer.getChildren().add(guiBuilding);
     }
     
-    public Building(Brain b, int nOfFloors, int nOfKeypads, int nOfElevators, int eCapacity){
+    public Building(Brain b, int num, int nOfFloors, int nOfKeypads, int nOfElevators, int eCapacity){
         brain = b;
+        
+        personElevatorsList = new ArrayList();
+        PersonElevator PE;
+        for(int i=0 ; i< nOfElevators ; i++){
+            PE = new PersonElevator(this, i, eCapacity);
+            this.addElevator(PE);
+        }
         
         floorsList = new ArrayList();
         Floor F;
@@ -37,13 +65,40 @@ public class Building {
             this.addFloor(F);
         }
         
-        personElevatorsList = new ArrayList();
-        PersonElevator PE;
-        for(int i=0 ; i< nOfElevators ; i++){
-            PE = new PersonElevator(this, i, eCapacity);
-            this.addElevator(PE);
+        
+        /**
+         * GUI CODE
+         */
+        guiContainer = new Pane();
+        guiContainer.setLayoutX(10 + (buildingWidth + 10)* num);
+        guiContainer.setLayoutY(10 + 20 * num);
+        guiBuilding = new Rectangle(0,0,buildingWidth, buildingHeight);
+        guiContainer.getChildren().add(guiBuilding);
+        
+        // Adding floors to GUI
+        for(int i=0 ; i<numOfFloors ; i++){
+            guiContainer.getChildren().add(floorsList.get(i).getGuiContainer());
+        }
+        
+        // Ading elevators to GUI
+        for(int i=0 ; i<nOfElevators ; i++){
+            guiContainer.getChildren().add(personElevatorsList.get(i).getGuiContainer());
+        }
+    
+        timerTask = new MyTimerTask(this);
+        timer = new Timer(true);
+        timer.scheduleAtFixedRate(timerTask, 0, 40);
+        for(int i=0 ; i< numOfPersonElevators ; i++){
+            timerTask.addTarget(1,i);
+            timerTask.addTarget(0,i);
+            timerTask.addTarget(2,i);
         }
     }
+    
+    public Pane getBuildingPane(){
+        return this.guiContainer;
+    }
+    
     
     public int getBuildingNumber(){
         return buildingNumber;
@@ -81,4 +136,11 @@ public class Building {
         return floorsList.size();
     }
     
+    public int getElevatorHeight(){
+        return elevatorHeight;
+    }
+    
+    public int getFloorHeight(){
+        return floorHeight;
+    }
 }
