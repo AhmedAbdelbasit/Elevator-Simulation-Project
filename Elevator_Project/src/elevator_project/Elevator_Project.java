@@ -30,16 +30,18 @@ public class Elevator_Project extends Application {
     public static Brain mainBrain;
 
     public static Building mainBuilding[];
-    public static int numOfBuildings = 3;
-    public static int buildingWidth = 300;
+    public static int numOfBuildings = 2;
+    public static int numOfFloors = 8;
+    public static int buildingWidth = 300 + 18*(numOfFloors -1);
+    public static int buildingFloorWidth = 300 ;
     public static int buildingHeight = 400;
 
-    public static int floorWidth = (buildingWidth -20)*2/3;
-    public static int numOfFloors = 8;
+    public static int floorWidth = (buildingFloorWidth -20)*2/3;
+//    public static int numOfFloors = 8;
     public static int floorHeight = (buildingHeight-20)/numOfFloors;
 
-    public static int numOfPersonElevators = 2;
-    public static int elevatorWidth = 30;
+    public static int numOfPersonElevators = 3;
+    public static int elevatorWidth = floorWidth/(2*numOfPersonElevators + 1);
     public static int elevatorHeight = floorHeight*2/3;
     public static int elevatorCapacity = 5;
     
@@ -57,41 +59,6 @@ public class Elevator_Project extends Application {
         root = new Pane();
 
 
-//        
-//        Button btnUp = new Button();
-//        btnUp.setText("Move Up");
-//        btnUp.setLayoutY(buildingHeight + 10);
-//        btnUp.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                int T = getElevatorFloor((int)E[eState].getY()) +1;
-//                if(T<numOfFloors){
-//                    timerTask.addTarget(T, eState);
-//                    System.out.println("TimerTask started");
-//                }
-//                eState += 1;
-//                    if(eState == numOfPersonElevators)
-//                        eState = 0;
-//            }
-//        });
-//        
-//        Button btnDown = new Button();
-//        btnDown.setText("Move Down");
-//        btnDown.setLayoutY(buildingHeight + 10);
-//        btnDown.setLayoutX(150);
-//        btnDown.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                int T = getElevatorFloor((int)E[eState].getY()) -1;
-//                if(T>=0){
-//                    timerTask.addTarget(T, eState);
-//                    System.out.println("TimerTask started");
-//                }
-//                eState += 1;
-//                    if(eState == numOfPersonElevators)
-//                        eState = 0;
-//            }
-//        });
 //        
 //        HBox[] keypads = new HBox[numOfFloors];
 //        Button[][] B = new Button[numOfFloors][numOfFloors];
@@ -141,6 +108,36 @@ public class Elevator_Project extends Application {
             root.getChildren().add(mainBuilding[i].getBuildingPane());
         }
         
+        Button btnUp = new Button();
+        btnUp.setText("Move Up");
+        btnUp.setLayoutY(buildingHeight + 20);
+        btnUp.setLayoutX(20);
+        btnUp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mainBuilding[0].addElevatorTask(eState, 5);
+                eState += 1;
+                    if(eState == numOfPersonElevators)
+                        eState = 0;
+            }
+        });
+        
+        Button btnDown = new Button();
+        btnDown.setText("Move Down");
+        btnDown.setLayoutY(buildingHeight + 20);
+        btnDown.setLayoutX(150);
+        btnDown.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mainBuilding[0].addElevatorTask(eState, 2);
+                eState += 1;
+                    if(eState == numOfPersonElevators)
+                        eState = 0;
+            }
+        });
+
+        root.getChildren().add(btnUp);
+        root.getChildren().add(btnDown);
         
         scene = new Scene(root, 1000, 600);
 //        buildingWidth + 40 + numOfFloors*keyButtonWidth

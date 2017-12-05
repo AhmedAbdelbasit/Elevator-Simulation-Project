@@ -9,6 +9,7 @@ package elevator_project;
  *
  * @author Poto
  */
+import static elevator_project.Elevator_Project.elevatorWidth;
 import java.util.ArrayList;
 
 //import java.util.Date;
@@ -17,28 +18,29 @@ import java.util.TimerTask;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.Pane;
 
-public class MyTimerTask extends TimerTask {
+public class DoorTimer extends TimerTask {
     private ArrayList<Integer>[] targets;
-    private Building building;
-    private ArrayList<Pane> guiElevatorList;
+    private Floor floor;
+    private ArrayList<ElevatorDoor> guiDoorList;
     private int nOfElevators;
     
-    public MyTimerTask(Building B){
-        building  = B;
-        nOfElevators = building.getNumOfElevators();
-        guiElevatorList = new ArrayList();
+    public DoorTimer(Floor F){
+        floor  = F;
+        nOfElevators = F.getBuilding().getNumOfElevators();
+        guiDoorList = new ArrayList();
         
         for(int i=0 ; i<nOfElevators ; i++){
-            guiElevatorList.add(((PersonElevator)building.getElevator(i)).getGuiContainer());
+            guiDoorList.add(F.getElevatorDoor(i));
         }
         targets = new ArrayList[nOfElevators];
         for(int i=0 ; i<nOfElevators ; i++){
             targets[i] = new ArrayList();
         }
-        //targets = new ArrayList[E.length];
+
     }
-    public void addTarget(int x, int e){
-        targets[e].add( 8+ ((building.getNumOfFloors() - x)*(building.getFloorHeight())) - building.getElevatorHeight() );
+    
+    public void addTarget(int order, int nDoor){
+        targets[nDoor].add(order);
     }
     
     @Override
@@ -48,15 +50,20 @@ public class MyTimerTask extends TimerTask {
 
     private void completeTask() {
         try {
-            for(int elevatorNum=0 ; elevatorNum<nOfElevators ; elevatorNum++){
-                double p = guiElevatorList.get(elevatorNum).getLayoutY();
-                if(targets[elevatorNum].size() > 0){
-                    if(targets[elevatorNum].get(0) > p){
-                        guiElevatorList.get(elevatorNum).setLayoutY(p + 1);
-                    }else if(targets[elevatorNum].get(0) < p){
-                    guiElevatorList.get(elevatorNum).setLayoutY(p-1);
+            for(int doorNum=0 ; doorNum<nOfElevators ; doorNum++){
+                
+                if(targets[doorNum].size() > 0){
+                    double p = guiDoorList.get(doorNum).getLeftDoorX();
+//                    System.out.println(p);
+                    if((targets[doorNum].get(0) == 0) && (p<0)){
+                        guiDoorList.get(doorNum).closeStep();
+                    }else if((targets[doorNum].get(0) == 1) && (p>(-1*elevatorWidth/2))){
+                        guiDoorList.get(doorNum).openStep();
                     }else{
-                        targets[elevatorNum].remove(0);
+                        if(targets[doorNum].get(0) == 0){
+                            floor.getBuilding().finishElevatorTask(doorNum);
+                        }
+                        targets[doorNum].remove(0);
                     }
                 }
             }

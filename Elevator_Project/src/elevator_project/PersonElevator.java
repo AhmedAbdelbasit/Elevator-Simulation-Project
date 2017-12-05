@@ -33,6 +33,7 @@ public class PersonElevator extends Elevator {
         guiElevator.setLayoutY(getElevatorY(0));
         Rectangle R = new Rectangle(0,0,elevatorWidth, elevatorHeight);
         R.setFill(Color.BLUE);
+        R.setOpacity(0.6);
         guiElevator.getChildren().add(R);
 //        guiElevator.setFill(Color.BLUE);
     }
@@ -50,8 +51,7 @@ public class PersonElevator extends Elevator {
     }
     
     private int getElevatorY(int f){
-        
-        return (20+(numOfFloors)*floorHeight-elevatorHeight);
+        return (10+(numOfFloors)*floorHeight-elevatorHeight);
     }
     
     public static int getElevatorFloor(int y){
