@@ -30,14 +30,13 @@ public class Elevator_Project extends Application {
     public static Brain mainBrain;
 
     public static Building mainBuilding[];
-    public static int numOfBuildings = 2;
-    public static int numOfFloors = 8;
-    public static int buildingWidth = 300 + 18*(numOfFloors -1);
+    public static int numOfBuildings = 4;
+    public static int numOfFloors = 5;
+    public static int buildingWidth = 300 + 26*(numOfFloors -1);
     public static int buildingFloorWidth = 300 ;
     public static int buildingHeight = 400;
 
     public static int floorWidth = (buildingFloorWidth -20)*2/3;
-//    public static int numOfFloors = 8;
     public static int floorHeight = (buildingHeight-20)/numOfFloors;
 
     public static int numOfPersonElevators = 3;
@@ -48,6 +47,8 @@ public class Elevator_Project extends Application {
     public static int keyButtonWidth = 30;
     public static int keyButtonHeight = 15;
     
+    public static Pane treePane;
+    public static Pane graphicsPane;
     public static Pane root;
     public static Scene scene;
 
@@ -55,9 +56,102 @@ public class Elevator_Project extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-                
+        
         root = new Pane();
+        
+        treePane = new Pane();
+        Rectangle R = new Rectangle(0,0,200,buildingHeight);
+        treePane.getChildren().add(R);
+        treePane.setLayoutX(10);
+        treePane.setLayoutY(10);
+        
+        graphicsPane = new Pane();
+        graphicsPane.setLayoutX(220);
+        
+        mainBrain = new Brain();
+        mainBuilding = new Building[numOfBuildings];
+        for(int i=0 ; i<numOfBuildings ; i++){
+            mainBuilding[i] = new Building(mainBrain, i,numOfFloors, 1, numOfPersonElevators, elevatorCapacity);
+            graphicsPane.getChildren().add(mainBuilding[i].getBuildingPane());
+        }
+        
+        
+        
+        root.getChildren().add(treePane);
+        root.getChildren().add(graphicsPane);
+        
+        Button btnUp = new Button();
+        btnUp.setText("Show Next");
+        btnUp.setLayoutY(buildingHeight + 20);
+        btnUp.setLayoutX(10);
+        btnUp.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                graphicsPane.getChildren().get(0).toFront();
+            }
+        });
+        
+        Button btnDown = new Button();
+        btnDown.setText("Show Previous");
+        btnDown.setLayoutY(buildingHeight + 20);
+        btnDown.setLayoutX(115);
+        btnDown.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                graphicsPane.getChildren().get(numOfBuildings-1).toBack();
+            }
+        });
+        
+        root.getChildren().add(btnUp);
+        root.getChildren().add(btnDown);
+        
+        scene = new Scene(root, 1000, 600);
 
+        primaryStage.setTitle("Elevator Project");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+ 
+    public static void main(String[] args) {
+        launch(args); 
+    }
+}
+
+
+
+
+
+//        Button btnUp = new Button();
+//        btnUp.setText("Move Up");
+//        btnUp.setLayoutY(buildingHeight + 20);
+//        btnUp.setLayoutX(20);
+//        btnUp.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                mainBuilding[0].addElevatorTask(eState, 5);
+//                eState += 1;
+//                    if(eState == numOfPersonElevators)
+//                        eState = 0;
+//            }
+//        });
+//        
+//        Button btnDown = new Button();
+//        btnDown.setText("Move Down");
+//        btnDown.setLayoutY(buildingHeight + 20);
+//        btnDown.setLayoutX(150);
+//        btnDown.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                mainBuilding[0].addElevatorTask(eState, 2);
+//                eState += 1;
+//                    if(eState == numOfPersonElevators)
+//                        eState = 0;
+//            }
+//        });
+//
+//        root.getChildren().add(btnUp);
+//        root.getChildren().add(btnDown);
 
 //        
 //        HBox[] keypads = new HBox[numOfFloors];
@@ -100,69 +194,6 @@ public class Elevator_Project extends Application {
 //        root.getChildren().add(btnUp);
 //        root.getChildren().add(btnDown);
 //        
-        mainBrain = new Brain();
-        mainBuilding = new Building[3];
-        for(int i=0 ; i<numOfBuildings ; i++){
-            mainBuilding[i] = new Building(mainBrain, i,numOfFloors, 1, numOfPersonElevators, elevatorCapacity);
-            
-            root.getChildren().add(mainBuilding[i].getBuildingPane());
-        }
-        
-        Button btnUp = new Button();
-        btnUp.setText("Move Up");
-        btnUp.setLayoutY(buildingHeight + 20);
-        btnUp.setLayoutX(20);
-        btnUp.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                mainBuilding[0].addElevatorTask(eState, 5);
-                eState += 1;
-                    if(eState == numOfPersonElevators)
-                        eState = 0;
-            }
-        });
-        
-        Button btnDown = new Button();
-        btnDown.setText("Move Down");
-        btnDown.setLayoutY(buildingHeight + 20);
-        btnDown.setLayoutX(150);
-        btnDown.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                mainBuilding[0].addElevatorTask(eState, 2);
-                eState += 1;
-                    if(eState == numOfPersonElevators)
-                        eState = 0;
-            }
-        });
-
-        root.getChildren().add(btnUp);
-        root.getChildren().add(btnDown);
-        
-        scene = new Scene(root, 1000, 600);
-//        buildingWidth + 40 + numOfFloors*keyButtonWidth
-//        buildingHeight + 40
-
-        primaryStage.setTitle("Elevator Project");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args); 
-    }
-}
-
-
-
-
-
-
-
-
 
 //        Build = new Rectangle(10,10,buildingWidth, buildingHeight-0);
 //        root.getChildren().add(Build);

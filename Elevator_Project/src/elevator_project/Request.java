@@ -12,15 +12,21 @@ package elevator_project;
 
 public class Request {
     private final int destinationFloor;
+    private final int sourceFloor;
     private final Keypad keypad;
     
-    public Request(int destF, Keypad kpad){
-        destinationFloor = destF;
+    public Request(int sourceF, int destinationF, Keypad kpad){
+        sourceFloor = sourceF;
+        destinationFloor = destinationF;
         keypad = kpad;
     }
     
     public int getDestination(){
         return destinationFloor;
+    }
+    
+    public int getSource(){
+        return sourceFloor;
     }
     
     public Keypad getSourceKeypad(){

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+
 //import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
@@ -31,9 +32,9 @@ public class Keypad {
     
     public Keypad(Floor F){
         locatedFloor = F;
-        Screen S = new Screen(this);
-        attachedScreen = S;
+        attachedScreen = new Screen(this);
         brain = this.locatedFloor.getBuilding().getBrain();
+        Keypad K = this;
         
         int nOfFloors = F.getBuilding().getNumOfFloors();
         listOfButtons = new ArrayList();
@@ -41,18 +42,19 @@ public class Keypad {
         guiKeyHolder = new HBox();
         for(int i=0 ; i<nOfFloors ; i++){
             B = new Button();
-            
             B.setText("" + i);
-            B.setPrefWidth(25);
-            B.setPrefHeight(2);
+            B.setPrefWidth(30);
+            B.setPrefHeight(15);
             B.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
                     int f = Integer.parseInt(((Button)(event.getSource())).getText());
 //                    int x = Integer.parseInt(listOfButtons.get(i).getText());
                     System.out.println("from " + F.getFloorNumber() + " to " + f);
-                    F.getBuilding().addElevatorTask(0,F.getFloorNumber());
-                    F.getBuilding().addElevatorTask(0,f);
+                    Request R = new Request(F.getFloorNumber(),f,K);
+                    brain.request(R);
+//                    F.getBuilding().addElevatorTask(0,F.getFloorNumber());
+//                    F.getBuilding().addElevatorTask(0,f);
                 }
             });
             listOfButtons.add(B);
@@ -60,6 +62,8 @@ public class Keypad {
                 guiKeyHolder.getChildren().add(B);
             }
         }
+        
+        guiKeyHolder.getChildren().add(attachedScreen.getGuiContainer());
         
         guiKeypad = new VBox();
         guiKeypad.getChildren().add(guiKeyHolder);
@@ -71,11 +75,15 @@ public class Keypad {
         return guiKeypad;
     }
     
-    public void sendRequest(Keypad K, Request R){
-        
-    }
+//    public void sendRequest(Keypad K, Request R){
+//        
+//    }
     
     public void displayResponse(int R){
         attachedScreen.display(R);
+    }
+    
+    public Building getBuilding(){
+        return locatedFloor.getBuilding();
     }
 }

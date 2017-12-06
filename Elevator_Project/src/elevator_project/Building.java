@@ -70,7 +70,7 @@ public class Building {
          * GUI CODE
          */
         guiContainer = new Pane();
-        guiContainer.setLayoutX(10 + (buildingWidth + 10)* num);
+        guiContainer.setLayoutX(10 /*+ (buildingWidth */+( 10)* num);
         guiContainer.setLayoutY(10 + 20 * num);
         guiBuilding = new Rectangle(0,0,buildingWidth, buildingHeight);
         guiContainer.getChildren().add(guiBuilding);

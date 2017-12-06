@@ -14,6 +14,8 @@ public class Brain implements IObserver {
     private ArrayList<Request> requestsQueue;
     private ArrayList<BrainBuilding> buildingsList;
     
+    private int eState = 0;
+    
     public Brain(){
         requestsQueue = new ArrayList();
         buildingsList = new ArrayList();
@@ -34,7 +36,25 @@ public class Brain implements IObserver {
     }
     
     private void applyRequest(Request R){
+        
+        // get request details
+        Keypad k = R.getSourceKeypad();
+        int s = R.getSource();
+        int d = R.getDestination();
+        
         // get best fit elevator
+        
+        
+        // send response
+        int eNum = eState;
+        eState += 1;
+        if(eState > 2){
+            eState = 0;
+        }
+        k.displayResponse(eNum);
+        k.getBuilding().addElevatorTask(eNum, s);
+        k.getBuilding().addElevatorTask(eNum, d);
+        
     }
     
     @Override
