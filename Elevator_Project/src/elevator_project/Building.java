@@ -50,6 +50,7 @@ public class Building {
     
     public Building(Brain b, int num, int nOfFloors, int nOfKeypads, int nOfElevators, int eCapacity){
         brain = b;
+        buildingNumber = num;
         
         personElevatorsList = new ArrayList();
         PersonElevator PE;
@@ -87,12 +88,14 @@ public class Building {
     
         timerTask = new BuildingTimer(this);
         timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 40);
+        timer.scheduleAtFixedRate(timerTask, 0, 75);
         for(int i=0 ; i< numOfPersonElevators ; i++){
 //            timerTask.addTarget(1,i);
 //            timerTask.addTarget(0,i);
 //            timerTask.addTarget(2,i);
         }
+        
+        brain.registerBuilding(this);
     }
     
     public Floor getFloor(int i){

@@ -11,8 +11,10 @@ import static elevator_project.Elevator_Project.floorHeight;
 import static elevator_project.Elevator_Project.floorWidth;
 import static elevator_project.Elevator_Project.numOfPersonElevators;
 import java.util.Timer;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -37,13 +39,19 @@ public class ElevatorDoor {
         guiElevatorDoor = new Pane();
         guiElevatorDoor.setLayoutX(getElevatorX(eNum));
         guiElevatorDoor.setLayoutY(getElevatorY());
-        Rectangle R = new Rectangle(0,0,elevatorWidth, elevatorHeight);
-        R.setFill(Color.BLUE);
-        leftDoor = new Rectangle(0,0,elevatorWidth/2, elevatorHeight);
-        leftDoor.setFill(Color.BROWN);
+        Rectangle R = new Rectangle(0,0,elevatorWidth, elevatorHeight-2);
+        Image img = new Image("/image/insideElevator.png");
+        R.setFill(new ImagePattern(img));
+//        R.setFill(Color.BLUE);
+        leftDoor = new Rectangle(0,0,elevatorWidth/2, elevatorHeight-2);
+        img = new Image("/image/leftDoor.png");
+        leftDoor.setFill(new ImagePattern(img));
+//        leftDoor.setFill(Color.BROWN);
 //        leftDoor.setOpacity(0.5);
-        rightDoor = new Rectangle(getRightDoorX(),0,elevatorWidth/2, elevatorHeight);
-        rightDoor.setFill(Color.BROWN);
+        rightDoor = new Rectangle(getRightDoorX(),0,elevatorWidth/2, elevatorHeight-2);
+        img = new Image("/image/rightDoor.png");
+        rightDoor.setFill(new ImagePattern(img));
+//        rightDoor.setFill(Color.BROWN);
         guiElevatorDoor.getChildren().add(R);
         guiElevatorDoor.getChildren().add(leftDoor);
         guiElevatorDoor.getChildren().add(rightDoor);
@@ -60,7 +68,8 @@ public class ElevatorDoor {
     }
     
     private static int getElevatorX(int i){
-        return ((floorWidth/(numOfPersonElevators+1))*(i+1)-elevatorWidth/2);
+                return ((2*elevatorWidth)*(i)+elevatorWidth);
+//        return ((floorWidth/(numOfPersonElevators+1))*(i+1)-elevatorWidth/2);
     }
     
     private static int getElevatorY(){

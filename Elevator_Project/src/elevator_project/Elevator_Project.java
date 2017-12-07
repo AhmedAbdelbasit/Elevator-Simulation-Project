@@ -30,16 +30,16 @@ public class Elevator_Project extends Application {
     public static Brain mainBrain;
 
     public static Building mainBuilding[];
-    public static int numOfBuildings = 4;
-    public static int numOfFloors = 5;
-    public static int buildingWidth = 300 + 26*(numOfFloors -1);
-    public static int buildingFloorWidth = 300 ;
+    public static int numOfBuildings = 1;
+    public static int numOfFloors = 6;
+    public static int buildingWidth = 400 + 26*(numOfFloors -1);
+    public static int buildingFloorWidth = 400 ;
     public static int buildingHeight = 400;
 
     public static int floorWidth = (buildingFloorWidth -20)*2/3;
     public static int floorHeight = (buildingHeight-20)/numOfFloors;
 
-    public static int numOfPersonElevators = 3;
+    public static int numOfPersonElevators = 2;
     public static int elevatorWidth = floorWidth/(2*numOfPersonElevators + 1);
     public static int elevatorHeight = floorHeight*2/3;
     public static int elevatorCapacity = 5;
@@ -105,7 +105,7 @@ public class Elevator_Project extends Application {
         root.getChildren().add(btnUp);
         root.getChildren().add(btnDown);
         
-        scene = new Scene(root, 1000, 600);
+        scene = new Scene(root, 800, 600);
 
         primaryStage.setTitle("Elevator Project");
         primaryStage.setScene(scene);

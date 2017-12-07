@@ -23,15 +23,29 @@ public class BuildingTimer extends TimerTask {
     private Building building;
     private ArrayList<Pane> guiElevatorList;
     private int nOfElevators;
+    private int numOfFloors;
+    private int floorHeight;
+    private ArrayList<Integer> currentLocations;
+    private ArrayList<Integer> currentStatus;
+    
+    private int motionStep = 3;
     
     public BuildingTimer(Building B){
         building  = B;
         nOfElevators = building.getNumOfElevators();
+        numOfFloors = B.getNumOfFloors();
+        floorHeight = B.getFloorHeight();
+        
         guiElevatorList = new ArrayList();
+        currentLocations = new ArrayList();
+        currentStatus = new ArrayList();
         
         for(int i=0 ; i<nOfElevators ; i++){
             guiElevatorList.add(((PersonElevator)building.getElevator(i)).getGuiContainer());
+            currentLocations.add(0);
+            currentStatus.add(0);
         }
+        
         targetsY = new ArrayList[nOfElevators];
         targetsFloor = new ArrayList[nOfElevators];
         for(int i=0 ; i<nOfElevators ; i++){
@@ -56,14 +70,38 @@ public class BuildingTimer extends TimerTask {
                 
                 if((targetsY[elevatorNum].size() > 0) && (targetsY[elevatorNum].size() == targetsFloor[elevatorNum].size())){
                     double p = guiElevatorList.get(elevatorNum).getLayoutY();
+                    double target = targetsY[elevatorNum].get(0);
                     
-                    if(targetsY[elevatorNum].get(0) > p){
-                        guiElevatorList.get(elevatorNum).setLayoutY(p + 1);
-                    }else if(targetsY[elevatorNum].get(0) < p){
-                    guiElevatorList.get(elevatorNum).setLayoutY(p-1);
+                    if(target > p){
+                        if((target - p) >= motionStep){
+                            guiElevatorList.get(elevatorNum).setLayoutY(p + motionStep);
+                        }else{
+                            guiElevatorList.get(elevatorNum).setLayoutY(p + (target - p));
+                        }
+                            
+                        int f = getElevatorFloor(p+1);
+                        if (currentLocations.get(elevatorNum) != f){
+                            currentLocations.set(elevatorNum, f);
+                            System.out.println("Elevator at floor : " + f);
+                        }
+//                        System.out.println("Elevator at floor : " + getElevatorFloor(p+1));
+                    }else if(target < p){
+                        if((p - target) >= motionStep){
+                            guiElevatorList.get(elevatorNum).setLayoutY(p-motionStep);
+                        }else{
+                            guiElevatorList.get(elevatorNum).setLayoutY(p - (p - target));
+                        }
+                        
+                        int f = (getElevatorFloor(p)+1);
+                        if (currentLocations.get(elevatorNum) != f){
+                            currentLocations.set(elevatorNum, f);
+                            System.out.println("Elevator at floor : " + f);
+                        }
                     }else{
+                        
                         building.getFloor(targetsFloor[elevatorNum].get(0)).openDoor(elevatorNum);
                         targetsY[elevatorNum].remove(0);
+                        
                     }
                 }
             }
@@ -75,6 +113,13 @@ public class BuildingTimer extends TimerTask {
     
     public void applyNextOrder(int eNum){
         targetsFloor[eNum].remove(0);
+    }
+    
+    private int getElevatorFloor(double y){
+        int elevatorHeight = building.getElevatorHeight();
+        y += elevatorHeight - 10;
+        double floor = numOfFloors - (y/floorHeight) ;
+        return (int)floor;
     }
 }
 

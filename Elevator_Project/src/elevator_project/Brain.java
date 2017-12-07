@@ -5,6 +5,7 @@
  */
 package elevator_project;
 
+import static elevator_project.Elevator_Project.numOfPersonElevators;
 import java.util.ArrayList;
 /**
  * @author : Ahmed Abdelbasit Mohamed
@@ -48,13 +49,18 @@ public class Brain implements IObserver {
         // send response
         int eNum = eState;
         eState += 1;
-        if(eState > 2){
+        if(eState == numOfPersonElevators){
             eState = 0;
         }
         k.displayResponse(eNum);
         k.getBuilding().addElevatorTask(eNum, s);
         k.getBuilding().addElevatorTask(eNum, d);
-        
+    }
+    
+    public void registerBuilding(Building mB){
+        BrainBuilding B = new BrainBuilding(mB);
+        buildingsList.add(B);
+        System.out.println("Building number " + mB.getBuildingNumber() + " with " + mB.getNumOfElevators() + " Elevators");
     }
     
     @Override
@@ -83,18 +89,25 @@ public class Brain implements IObserver {
     private class BrainBuilding{
         private ArrayList<BrainElevator> registeredElevators;
         private int numOfFloors;
+        private int numOfElevators;
         
-        public BrainBuilding(int n){
-            numOfFloors = n;
+        public BrainBuilding(Building B){
+            numOfFloors = B.getNumOfFloors();
+            numOfElevators = B.getNumOfElevators();
             registeredElevators = new ArrayList();
+            for(int i=0 ; i<numOfElevators ; i++){
+                addElevator(B.getElevator(i));
+                registeredElevators.get(i).printData();
+            }
         }
         
         public void addElevator(Elevator E){
             char s = E.getStatus();
             int l = E.getLocation();
             int n = E.getNumOfPersonsInside();
+            int eN = E.getElevatorNumber();
             
-            BrainElevator BE = new BrainElevator(s, l, n);
+            BrainElevator BE = new BrainElevator(eN,s, l, n);
             registeredElevators.add(BE);
         }
         
@@ -114,11 +127,14 @@ public class Brain implements IObserver {
         private char status;
         private int location;
         private int numberOfPersonsInside;
+        private int elevatorNumber;
         
-        public BrainElevator(char s, int l, int n){
+        public BrainElevator(int eNum, char s, int l, int nP){
+            elevatorNumber = eNum;
             status = s;
             location = l;
-            numberOfPersonsInside = n;
+            numberOfPersonsInside = nP;
+            
         }
         
         private int getFitness(Request R){
@@ -130,6 +146,12 @@ public class Brain implements IObserver {
             status = s;
             location = l;
             numberOfPersonsInside = n;
+        }
+        
+        public void printData(){
+            System.out.print("\nRegistered Elevator " + elevatorNumber);
+            System.out.print("\n\t\tStatus : " + status + "\n\t\tlocation : " + location + "\n\t\tnumberOfPersonsInside : " + numberOfPersonsInside);
+            System.out.println();
         }
     }
 }

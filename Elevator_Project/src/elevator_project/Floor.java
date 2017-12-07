@@ -89,6 +89,13 @@ public class Floor {
 //            timerTask.addTarget(1,0);
 //            timerTask.addTarget(0,0);
 //        }
+
+        // adding rectangles to hide doors when openning
+        for(int i=0; i<(NumOfElevators+1) ; i++){
+            R = new Rectangle(2*i*elevatorWidth,floorHeight-elevatorHeight,elevatorWidth,elevatorHeight-2);
+            R.setFill(Color.WHITE);
+            guiFloor.getChildren().add(R);
+        }
     }
     
     public Pane getGuiContainer(){
