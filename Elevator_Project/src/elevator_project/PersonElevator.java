@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package elevator_project;
 
 import static elevator_project.Elevator_Project.*;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.layout.Pane;
@@ -18,8 +15,6 @@ import javafx.scene.layout.Pane;
 
 public class PersonElevator extends Elevator {
     private final int personsCapacity;
-    
-//    private Rectangle guiElevator;
     private Pane guiElevator;
     
     public PersonElevator(Building B, int eNumber, int capacity){
@@ -27,7 +22,6 @@ public class PersonElevator extends Elevator {
         personsCapacity = capacity;
         setParentBuilding(B);
         
-//        guiElevator = new Rectangle(getElevatorX(eNumber),getElevatorY(0),elevatorWidth, elevatorHeight);
         guiElevator = new Pane();
         guiElevator.setLayoutX(getElevatorX(eNumber));
         guiElevator.setLayoutY(getElevatorY(0));
@@ -35,7 +29,14 @@ public class PersonElevator extends Elevator {
         R.setFill(Color.BLUE);
         R.setOpacity(0.1);
         guiElevator.getChildren().add(R);
-//        guiElevator.setFill(Color.BLUE);
+
+        guiElevator.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent me) {
+                if(getStatus() == 's'){
+                    getParentBuilding().getFloor(getLocation()).reOpenDoor(getElevatorNumber());
+                }
+            }
+        });
     }
     
     public Pane getGuiContainer(){
@@ -48,15 +49,9 @@ public class PersonElevator extends Elevator {
     
     private static int getElevatorX(int i){
         return (10+(2*elevatorWidth)*(i)+elevatorWidth);
-//        return (10+(floorWidth/(numOfPersonElevators+1))*(i+1)-elevatorWidth/2);
     }
     
     private int getElevatorY(int f){
         return (10+(numOfFloors)*floorHeight-elevatorHeight);
     }
-    
-//    private static int getElevatorFloor(int y){
-//        int floor = numOfFloors - (y/floorHeight) -1;
-//        return floor;
-//    }
 }

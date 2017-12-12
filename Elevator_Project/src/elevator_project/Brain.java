@@ -40,14 +40,15 @@ public class Brain implements IObserver {
         
         // get request details
         Keypad k = R.getSourceKeypad();
+        int buildingNumber = k.getBuilding().getBuildingNumber();
         int s = R.getSource();
         int d = R.getDestination();
         
         // get best fit elevator
-        
+        int eNum = getBestFit(R);
         
         // send response
-        int eNum = eState;
+        eNum = eState;
         eState += 1;
         if(eState == numOfPersonElevators){
             eState = 0;
@@ -55,6 +56,12 @@ public class Brain implements IObserver {
         k.displayResponse(eNum);
         k.getBuilding().addElevatorTask(eNum, s);
         k.getBuilding().addElevatorTask(eNum, d);
+    }
+    
+    private int getBestFit(Request R){
+        
+        int elevatorNumber = 0;
+        return elevatorNumber;
     }
     
     public void registerBuilding(Building mB){
@@ -82,14 +89,20 @@ public class Brain implements IObserver {
         buildingsList.get(Bnum).updateElevator(E);
     }
     
+    public void updateElevatorLocation(Elevator E, int f){
+        int b = E.getParentBuilding().getBuildingNumber();
+        int e = E.getElevatorNumber();
+        buildingsList.get(b).registeredElevators.get(e).setLocation(f);
+    }
+    
     
     
     
     
     private class BrainBuilding{
         private ArrayList<BrainElevator> registeredElevators;
-        private int numOfFloors;
-        private int numOfElevators;
+        private final int numOfFloors;
+        private final int numOfElevators;
         
         public BrainBuilding(Building B){
             numOfFloors = B.getNumOfFloors();
@@ -139,13 +152,24 @@ public class Brain implements IObserver {
         
         private int getFitness(Request R){
             
-            return 0;
+            int numOfFloorsTravelled = 0;
+            return numOfFloorsTravelled;
         }
         
         public void updateData(char s, int l, int n){
             status = s;
             location = l;
             numberOfPersonsInside = n;
+        }
+
+        public void setNumberOfPersonsInside(int n) {
+            numberOfPersonsInside = n;
+        }
+        public void setStatus(char s){
+            status = s;
+        }
+        public void setLocation(int f){
+            location = f;
         }
         
         public void printData(){

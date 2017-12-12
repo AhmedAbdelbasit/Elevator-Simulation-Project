@@ -14,9 +14,11 @@ public abstract class Elevator implements IObservable{
     
     private Building parentBuilding;
     private int elevatorNumber;
-    private int currentPosition = 0;
+    private int currentFloor = 0;
     private char motionStatus = 'i';
     private int numOfPersonsInside = 0;
+
+    private IObserver observer;
     
     public Elevator(){
         
@@ -41,12 +43,21 @@ public abstract class Elevator implements IObservable{
     }
     
     public int getLocation(){
-        return currentPosition;
+        return currentFloor;
     }
     
     public int getNumOfPersonsInside(){
         return numOfPersonsInside;
     }
+    
+    public void setLocation(int f){
+        currentFloor = f;
+    }
+    
+    public void setStatus(char c){
+        motionStatus = c;
+    }
+    
     
     @Override
     public void add(IObserver O){

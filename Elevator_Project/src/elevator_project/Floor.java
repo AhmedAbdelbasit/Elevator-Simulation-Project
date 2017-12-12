@@ -129,6 +129,11 @@ public class Floor {
         timerTask.addTarget(0, dNum);
     }
     
+    public void reOpenDoor(int dNum){
+        timerTask.addTarget(0,1, dNum);
+//        timerTask.addTarget(0, dNum);
+    }
+    
 //    private static int getElevatorX(int i){
 //        return (10+(floorWidth/(numOfPersonElevators+1))*(i+1)-elevatorWidth/2);
 //    }

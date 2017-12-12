@@ -11,7 +11,9 @@ import static elevator_project.Elevator_Project.floorHeight;
 import static elevator_project.Elevator_Project.floorWidth;
 import static elevator_project.Elevator_Project.numOfPersonElevators;
 import java.util.Timer;
+//import javafx.event.EventHandler;
 import javafx.scene.image.Image;
+//import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -55,7 +57,6 @@ public class ElevatorDoor {
         guiElevatorDoor.getChildren().add(R);
         guiElevatorDoor.getChildren().add(leftDoor);
         guiElevatorDoor.getChildren().add(rightDoor);
-        
         
     }
     

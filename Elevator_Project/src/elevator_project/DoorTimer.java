@@ -43,6 +43,14 @@ public class DoorTimer extends TimerTask {
         targets[nDoor].add(order);
     }
     
+    public void addTarget(int i, int order, int nDoor){
+        if(targets[nDoor].size() > 0){
+            if(targets[nDoor].get(0) == 0){
+                targets[nDoor].add(i, order);
+            }
+        }
+    }
+    
     @Override
     public void run() {
         completeTask();

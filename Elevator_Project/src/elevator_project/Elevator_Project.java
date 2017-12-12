@@ -12,28 +12,31 @@ import javafx.scene.Scene;
 import javafx.scene.shape.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-//import java.util.Timer;
-import javafx.scene.paint.Color;
-//import java.util.Date;
-import java.util.Timer;
-//import java.util.TimerTask;
 
 /**
  * @author : Ahmed Abdelbasit Mohamed
  * emial : ahmed_abdelbasit94@hotmail.com
  */
 
+
+/*
+To be Added:
+    Threading.
+    GUI pane to create specific buildings
+    Get Business Rules
+    Implement Brain Algorithm
+    
+ */
 public class Elevator_Project extends Application {
     
     public static Brain mainBrain;
 
     public static Building mainBuilding[];
-    public static int numOfBuildings = 1;
-    public static int numOfFloors = 6;
-    public static int buildingWidth = 400 + 26*(numOfFloors -1);
-    public static int buildingFloorWidth = 400 ;
+    public static int numOfBuildings = 2;
+    public static int numOfFloors = 8;
+    public static int buildingWidth = 500 + 26*(numOfFloors -1);
+    public static int buildingFloorWidth = 500 ;
     public static int buildingHeight = 400;
 
     public static int floorWidth = (buildingFloorWidth -20)*2/3;
@@ -75,8 +78,6 @@ public class Elevator_Project extends Application {
             graphicsPane.getChildren().add(mainBuilding[i].getBuildingPane());
         }
         
-        
-        
         root.getChildren().add(treePane);
         root.getChildren().add(graphicsPane);
         
@@ -105,7 +106,7 @@ public class Elevator_Project extends Application {
         root.getChildren().add(btnUp);
         root.getChildren().add(btnDown);
         
-        scene = new Scene(root, 800, 600);
+        scene = new Scene(root, 900, 600);
 
         primaryStage.setTitle("Elevator Project");
         primaryStage.setScene(scene);

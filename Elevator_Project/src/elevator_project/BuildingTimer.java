@@ -83,6 +83,8 @@ public class BuildingTimer extends TimerTask {
                         if (currentLocations.get(elevatorNum) != f){
                             currentLocations.set(elevatorNum, f);
                             System.out.println("Elevator at floor : " + f);
+                            building.getElevator(elevatorNum).setLocation(f);
+                            building.getElevator(elevatorNum).setStatus('d');
                         }
 //                        System.out.println("Elevator at floor : " + getElevatorFloor(p+1));
                     }else if(target < p){
@@ -96,9 +98,11 @@ public class BuildingTimer extends TimerTask {
                         if (currentLocations.get(elevatorNum) != f){
                             currentLocations.set(elevatorNum, f);
                             System.out.println("Elevator at floor : " + f);
+                            building.getElevator(elevatorNum).setLocation(f);
+                            building.getElevator(elevatorNum).setStatus('u');
                         }
                     }else{
-                        
+                        building.getElevator(elevatorNum).setStatus('s');
                         building.getFloor(targetsFloor[elevatorNum].get(0)).openDoor(elevatorNum);
                         targetsY[elevatorNum].remove(0);
                         
