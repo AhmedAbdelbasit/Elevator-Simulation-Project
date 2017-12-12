@@ -90,6 +90,7 @@ public abstract class Elevator implements IObservable{
         
     }
     
-    
+    public void applyNext(){
+    }
     
 }

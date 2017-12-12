@@ -33,8 +33,8 @@ public class Elevator_Project extends Application {
     public static Brain mainBrain;
 
     public static Building mainBuilding[];
-    public static int numOfBuildings = 2;
-    public static int numOfFloors = 8;
+    public static int numOfBuildings = 1;
+    public static int numOfFloors = 4;
     public static int buildingWidth = 500 + 26*(numOfFloors -1);
     public static int buildingFloorWidth = 500 ;
     public static int buildingHeight = 400;

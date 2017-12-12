@@ -54,8 +54,10 @@ public class Brain implements IObserver {
             eState = 0;
         }
         k.displayResponse(eNum);
-        k.getBuilding().addElevatorTask(eNum, s);
-        k.getBuilding().addElevatorTask(eNum, d);
+        ((PersonElevator)(k.getBuilding().getElevator(eNum))).addTarget(s);
+        ((PersonElevator)(k.getBuilding().getElevator(eNum))).addTarget(d);
+//        k.getBuilding().addElevatorTask(eNum, s);
+//        k.getBuilding().addElevatorTask(eNum, d);
     }
     
     private int getBestFit(Request R){

@@ -69,7 +69,7 @@ public class DoorTimer extends TimerTask {
                         guiDoorList.get(doorNum).openStep();
                     }else{
                         if(targets[doorNum].get(0) == 0){
-                            floor.getBuilding().finishElevatorTask(doorNum);
+                            floor.getBuilding().getElevator(doorNum).applyNext();
                         }
                         targets[doorNum].remove(0);
                     }
