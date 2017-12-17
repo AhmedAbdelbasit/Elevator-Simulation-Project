@@ -56,9 +56,9 @@ public class Building {
         PersonElevator PE;
         for(int i=0 ; i< nOfElevators ; i++){
             PE = new PersonElevator(this, i, eCapacity);
-            PE.startThread();
-            PE.addTarget(2);
-            PE.addTarget(0);
+//            PE.startThread();
+//            PE.addTarget(2);
+//            PE.addTarget(0);
             this.addElevator(PE);
         }
         

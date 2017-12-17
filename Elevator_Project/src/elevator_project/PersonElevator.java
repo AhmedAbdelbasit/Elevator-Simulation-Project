@@ -52,18 +52,26 @@ public class PersonElevator extends Elevator {
             }
         });
         
+        initiateThread();
+        
+    }
+    
+    private void initiateThread(){
         elevatorMotor = new Thread(new Runnable(){
             @Override
             public void run() {
                 
 
-                while(true){
-                    System.out.println(getElevatorNumber() + " : " + currentFloor);
+                while(targetsFloor.size() > 0){
+//                    System.out.println(getElevatorNumber() + " : " + currentFloor);
+                    System.out.print('.');
                     try {
-                        if(targetsY.size() > 0 && (targetsY.size() == targetsFloor.size())){
+                        if((targetsY.size() == targetsFloor.size())){
                             double p = guiElevator.getLayoutY();
-                            double targetY = targetsY.get(0);
-                            
+                            double targetY = 0;
+                            if(targetsY.size() > 0){
+                                targetY = targetsY.get(0);
+                            }
                             // Case Down
                             if(targetY > p){
                                 if((targetY - p) >= motionStep){
@@ -100,8 +108,10 @@ public class PersonElevator extends Elevator {
                                 setStatus('s');
                                 getParentBuilding().getFloor(targetsFloor.get(0)).openDoor(getElevatorNumber());
                                 targetsY.remove(0);
+                                
                             }
-                            Thread.sleep(100);
+//                            elevatorMotor.wait(500);
+                            Thread.sleep(50);
                         }
                     } catch (InterruptedException ex) {
                         Logger.getLogger(PersonElevator.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,8 +120,6 @@ public class PersonElevator extends Elevator {
             }
             
         });
-        
-        
     }
     
     public Pane getGuiContainer(){
@@ -134,6 +142,14 @@ public class PersonElevator extends Elevator {
         targetsFloor.add(f);
         Building b = getParentBuilding();
         targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+        if (elevatorMotor.isAlive()){
+            System.out.println("Alive");
+        }else{
+            System.out.println("Dead");
+//            elevatorMotor.start();
+            initiateThread();
+            elevatorMotor.start();
+        }
     }
     
 //    public void addTarget(int f){
