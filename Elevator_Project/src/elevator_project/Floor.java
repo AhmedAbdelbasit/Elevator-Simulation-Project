@@ -126,7 +126,7 @@ public class Floor {
     
     public void openDoor(int dNum){
         timerTask.addTarget(1, dNum);
-        timerTask.addTarget(0, dNum);
+//        timerTask.addTarget(0, dNum);
     }
     
     public void reOpenDoor(int dNum){

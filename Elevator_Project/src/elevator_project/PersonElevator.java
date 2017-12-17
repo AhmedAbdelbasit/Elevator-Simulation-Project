@@ -139,16 +139,32 @@ public class PersonElevator extends Elevator {
     }
     
     public void addTarget(int f){
-        targetsFloor.add(f);
-        Building b = getParentBuilding();
-        targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
-        if (elevatorMotor.isAlive()){
-            System.out.println("Alive");
+        if(targetsFloor.size() > 0){
+            if(targetsFloor.get(targetsFloor.size() - 1) != f){
+                targetsFloor.add(f);
+                Building b = getParentBuilding();
+                targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+                if (elevatorMotor.isAlive()){
+                    System.out.println("Alive");
+                }else{
+                    System.out.println("Dead");
+        //            elevatorMotor.start();
+                    initiateThread();
+                    elevatorMotor.start();
+                }
+            }
         }else{
-            System.out.println("Dead");
-//            elevatorMotor.start();
-            initiateThread();
-            elevatorMotor.start();
+            targetsFloor.add(f);
+            Building b = getParentBuilding();
+            targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+            if (elevatorMotor.isAlive()){
+                System.out.println("Alive");
+            }else{
+                System.out.println("Dead");
+    //            elevatorMotor.start();
+                initiateThread();
+                elevatorMotor.start();
+            }
         }
     }
     
