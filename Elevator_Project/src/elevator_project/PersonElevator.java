@@ -19,11 +19,12 @@ import javafx.scene.layout.Pane;
 public class PersonElevator extends Elevator {
     private final int personsCapacity;
     private Pane guiElevator;
-    Thread elevatorMotor;
+    private Thread elevatorMotor;
     private ArrayList<Integer> targetsFloor;
     private ArrayList<Integer> targetsY;
     private int currentFloor = 0;
-    private int motionStep = 2;
+    private final int motionStep = 2;
+    private final int delayTime = 75;
     
     public PersonElevator(Building B, int eNumber, int capacity){
         
@@ -60,18 +61,13 @@ public class PersonElevator extends Elevator {
         elevatorMotor = new Thread(new Runnable(){
             @Override
             public void run() {
-                
-
-                while(targetsFloor.size() > 0){
-//                    System.out.println(getElevatorNumber() + " : " + currentFloor);
-                    System.out.print('.');
-                    try {
+                try {
+                    while(targetsFloor.size() > 0){
+                        System.out.print('.');
                         if((targetsY.size() == targetsFloor.size())){
                             double p = guiElevator.getLayoutY();
-                            double targetY = 0;
-                            if(targetsY.size() > 0){
-                                targetY = targetsY.get(0);
-                            }
+                            double targetY = targetsY.get(0);
+
                             // Case Down
                             if(targetY > p){
                                 if((targetY - p) >= motionStep){
@@ -108,15 +104,15 @@ public class PersonElevator extends Elevator {
                                 setStatus('s');
                                 getParentBuilding().getFloor(targetsFloor.get(0)).openDoor(getElevatorNumber());
                                 targetsY.remove(0);
-                                
+
                             }
-//                            elevatorMotor.wait(500);
-                            Thread.sleep(50);
+                            Thread.sleep(delayTime);
                         }
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(PersonElevator.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                } catch (InterruptedException ex) {
+//                        Logger.getLogger(PersonElevator.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
             }
             
         });
@@ -139,8 +135,9 @@ public class PersonElevator extends Elevator {
     }
     
     public void addTarget(int f){
-        if(targetsFloor.size() > 0){
-            if(targetsFloor.get(targetsFloor.size() - 1) != f){
+        int s = targetsFloor.size();
+        if(s > 0){
+            if(targetsFloor.get(s - 1) != f){
                 targetsFloor.add(f);
                 Building b = getParentBuilding();
                 targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );

@@ -64,27 +64,27 @@ public class DoorTimer extends TimerTask {
     }
 
     private void completeTask() {
-        try {
-            for(int doorNum=0 ; doorNum<nOfElevators ; doorNum++){
-                
-                if(targets[doorNum].size() > 0){
-                    double p = guiDoorList.get(doorNum).getLeftDoorX();
-//                    System.out.println(p);
-                    if((targets[doorNum].get(0) == 0) && (p<0)){
-                        guiDoorList.get(doorNum).closeStep();
-                    }else if((targets[doorNum].get(0) == 1) && (p>(-1*elevatorWidth/2))){
-                        guiDoorList.get(doorNum).openStep();
-                    }else{
-                        if(targets[doorNum].get(0) == 0){
-                            floor.getBuilding().getElevator(doorNum).applyNext();
-                        }
-                        targets[doorNum].remove(0);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            for(int doorNum=0 ; doorNum<nOfElevators ; doorNum++){
+//                
+//                if(targets[doorNum].size() > 0){
+//                    double p = guiDoorList.get(doorNum).getLeftDoorX();
+////                    System.out.println(p);
+//                    if((targets[doorNum].get(0) == 0) && (p<0)){
+//                        guiDoorList.get(doorNum).closeStep();
+//                    }else if((targets[doorNum].get(0) == 1) && (p>(-1*elevatorWidth/2))){
+//                        guiDoorList.get(doorNum).openStep();
+//                    }else{
+//                        if(targets[doorNum].get(0) == 0){
+//                            floor.getBuilding().getElevator(doorNum).applyNext();
+//                        }
+//                        targets[doorNum].remove(0);
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }
 

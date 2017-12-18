@@ -23,8 +23,8 @@ public class Floor {
     private ArrayList<Keypad> listOfKeypads;
     private ArrayList<ElevatorDoor> listOfElevatorDoors;
     
-    private DoorTimer timerTask;
-    private Timer timer;
+//    private DoorTimer timerTask;
+//    private Timer timer;
     
     private Pane guiFloor;
 //    private Pane guiKeypad;
@@ -78,9 +78,9 @@ public class Floor {
             guiFloor.getChildren().add(listOfKeypads.get(i).getGuiContainer());
         }
         
-        timerTask = new DoorTimer(this);
-        timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 40);
+//        timerTask = new DoorTimer(this);
+//        timer = new Timer(true);
+//        timer.scheduleAtFixedRate(timerTask, 0, 40);
 //        for(int i=0 ; i< NumOfElevators ; i++){
 //            timerTask.addTarget(1,i);
 //            timerTask.addTarget(0,i);
@@ -125,13 +125,17 @@ public class Floor {
     }
     
     public void openDoor(int dNum){
-        timerTask.addTarget(1, dNum);
-//        timerTask.addTarget(0, dNum);
+        // Timer
+//        timerTask.addTarget(1, dNum);
+        // Threads
+        listOfElevatorDoors.get(dNum).addTarget(1, dNum);
     }
     
     public void reOpenDoor(int dNum){
-        timerTask.addTarget(0,1, dNum);
-//        timerTask.addTarget(0, dNum);
+        // Timer
+//        timerTask.addTarget(0,1, dNum);
+        // Threads
+        listOfElevatorDoors.get(dNum).addTarget(1, dNum);
     }
     
 //    private static int getElevatorX(int i){
