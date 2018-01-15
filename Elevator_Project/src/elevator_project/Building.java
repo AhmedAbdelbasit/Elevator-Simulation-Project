@@ -27,8 +27,8 @@ public class Building {
     private Pane guiContainer;
     private Rectangle guiBuilding ;
     
-    private BuildingTimer timerTask;
-    private Timer timer;
+//    private BuildingTimer timerTask;
+//    private Timer timer;
     
     public Building(Brain b){
         brain = b;
@@ -89,14 +89,14 @@ public class Building {
             guiContainer.getChildren().add(personElevatorsList.get(i).getGuiContainer());
         }
     
-        timerTask = new BuildingTimer(this);
-        timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 75);
-        for(int i=0 ; i< numOfPersonElevators ; i++){
-//            timerTask.addTarget(1,i);
-//            timerTask.addTarget(0,i);
-//            timerTask.addTarget(2,i);
-        }
+//        timerTask = new BuildingTimer(this);
+//        timer = new Timer(true);
+//        timer.scheduleAtFixedRate(timerTask, 0, 75);
+//        for(int i=0 ; i< numOfPersonElevators ; i++){
+////            timerTask.addTarget(1,i);
+////            timerTask.addTarget(0,i);
+////            timerTask.addTarget(2,i);
+//        }
         
         brain.registerBuilding(this);
     }
@@ -105,13 +105,13 @@ public class Building {
         return floorsList.get(numOfFloors - i - 1);
     }
     
-    public void addElevatorTask(int eNum, int fNum){
-        timerTask.addTarget(fNum, eNum);
-    }
+//    public void addElevatorTask(int eNum, int fNum){
+//        timerTask.addTarget(fNum, eNum);
+//    }
     
-    public void finishElevatorTask(int eNum){
-        timerTask.applyNextOrder(eNum);
-    }
+//    public void finishElevatorTask(int eNum){
+//        timerTask.applyNextOrder(eNum);
+//    }
     
     public Pane getBuildingPane(){
         return this.guiContainer;
