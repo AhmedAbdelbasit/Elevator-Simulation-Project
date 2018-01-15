@@ -45,14 +45,15 @@ public class Brain implements IObserver {
         int d = R.getDestination();
         
         // get best fit elevator
-        int eNum = getBestFit(R);
+        int eNum = getBestFit(buildingNumber, s,  d);
         
         // send response
-        eNum = eState;
-        eState += 1;
-        if(eState == numOfPersonElevators){
-            eState = 0;
-        }
+//        eNum = eState;
+//        eState += 1;
+//        if(eState == numOfPersonElevators){
+//            eState = 0;
+//        }
+
         k.displayResponse(eNum);
         ((PersonElevator)(k.getBuilding().getElevator(eNum))).addTarget(s);
         ((PersonElevator)(k.getBuilding().getElevator(eNum))).addTarget(d);
@@ -60,10 +61,20 @@ public class Brain implements IObserver {
 //        k.getBuilding().addElevatorTask(eNum, d);
     }
     
-    private int getBestFit(Request R){
+    private int getBestFit(int b, int s, int d){
+        BrainBuilding BB = buildingsList.get(b);
+        int bestE = 0;
+        int min_path = 1000;
+        int temp;
         
-        int elevatorNumber = 0;
-        return elevatorNumber;
+        for(int e=0 ; e<BB.getNumOfElevators() ; e++){
+            temp = BB.registeredElevators.get(e).getFitness(s,d);
+            if(temp < min_path){
+                min_path = temp;
+                bestE = e;
+            }
+        }
+        return bestE;
     }
     
     public void registerBuilding(Building mB){
@@ -74,7 +85,7 @@ public class Brain implements IObserver {
     
     @Override
     public void addStation(IObservable S){
-        Elevator E = (PersonElevator)S;
+        PersonElevator E = (PersonElevator)S;
         int Bnum = E.getParentBuilding().getBuildingNumber();
         buildingsList.get(Bnum).addElevator(E);
     }
@@ -97,14 +108,10 @@ public class Brain implements IObserver {
         buildingsList.get(b).registeredElevators.get(e).setLocation(f);
     }
     
-    
-    
-    
-    
     private class BrainBuilding{
-        private ArrayList<BrainElevator> registeredElevators;
+        public ArrayList<BrainElevator> registeredElevators;
         private final int numOfFloors;
-        private final int numOfElevators;
+        private int numOfElevators;
         
         public BrainBuilding(Building B){
             numOfFloors = B.getNumOfFloors();
@@ -121,8 +128,9 @@ public class Brain implements IObserver {
             int l = E.getLocation();
             int n = E.getNumOfPersonsInside();
             int eN = E.getElevatorNumber();
+            ArrayList r = ((PersonElevator)E).getRequestsList();
             
-            BrainElevator BE = new BrainElevator(eN,s, l, n);
+            BrainElevator BE = new BrainElevator(eN,s, l, n, r);
             registeredElevators.add(BE);
         }
         
@@ -133,28 +141,94 @@ public class Brain implements IObserver {
             registeredElevators.get(E.getElevatorNumber()).updateData(s, l, n);
         }
         
-        
+        public int getNumOfElevators(){
+            return numOfElevators;
+        }
     }
-    
-    
     
     private class BrainElevator{
         private char status;
         private int location;
         private int numberOfPersonsInside;
         private int elevatorNumber;
+        public ArrayList<Integer> requests;
         
-        public BrainElevator(int eNum, char s, int l, int nP){
+        public BrainElevator(int eNum, char s, int l, int nP, ArrayList req){
             elevatorNumber = eNum;
             status = s;
             location = l;
             numberOfPersonsInside = nP;
-            
+            requests = req;
         }
         
-        private int getFitness(Request R){
-            
+        private int getFitness(int s, int d){
             int numOfFloorsTravelled = 0;
+            int rSize = requests.size();
+            int sIndex = 0;
+            boolean SET = false;
+            
+            if(rSize == 0){
+                numOfFloorsTravelled = (Math.abs(d-s) + Math.abs(s-location));
+                SET = true;
+            }else{
+                if((s>=location && s<=requests.get(0)) || (s<=location && s>=requests.get(0)) ){
+                    sIndex = 0;
+                    SET = true;
+                    numOfFloorsTravelled += Math.abs(s-location);
+                }else{
+                    numOfFloorsTravelled += Math.abs(requests.get(0)-location);
+                }
+                
+                for(int i=1 ; i<rSize ; i++){
+                    if((s>=requests.get(i) && s<=requests.get(i-1)) || (s<=requests.get(i) && s>=requests.get(i-1)) ){
+                        sIndex = i;
+                        numOfFloorsTravelled += Math.abs(s-requests.get(i-1));
+                        SET = true;
+                        break;
+                    }else{
+                        numOfFloorsTravelled += Math.abs(requests.get(i-1)-requests.get(i));
+                    }
+                }
+                
+                if(!SET){
+                    numOfFloorsTravelled += Math.abs(s-requests.get(rSize-1));
+                    sIndex = rSize;
+                }
+                
+                
+                
+                // destination calculation
+                SET = false;
+                if(sIndex >= rSize-1){
+                     numOfFloorsTravelled += Math.abs(s-d);
+                     SET = true;
+                }else{
+                    if((d>=s && d<=requests.get(sIndex)) || (d<=s && d>=requests.get(sIndex)) ){
+                        numOfFloorsTravelled += Math.abs(s-d);
+                        SET = true;
+                    }else{
+                        numOfFloorsTravelled += Math.abs(requests.get(sIndex)-s);
+                    }
+                    
+                    for(int i=sIndex+1 ; i<rSize ; i++){
+                        if((d>=requests.get(i) && d<=requests.get(i-1)) || (d<=requests.get(i) && d>=requests.get(i-1)) ){
+                            numOfFloorsTravelled += Math.abs(d-requests.get(i-1));
+                            SET = true;
+                            break;
+                        }else{
+                            numOfFloorsTravelled += Math.abs(requests.get(i-1)-requests.get(i));
+                        }
+                    }
+                }
+                if(!SET){
+                    numOfFloorsTravelled += Math.abs(d-requests.get(rSize-1));
+                }
+            }
+            System.out.println();
+            System.out.println("##################");
+            System.out.println("Num Of Travelled Floors = " + numOfFloorsTravelled);
+            System.out.println("##################");
+            System.out.println();
             return numOfFloorsTravelled;
         }
         
@@ -162,6 +236,11 @@ public class Brain implements IObserver {
             status = s;
             location = l;
             numberOfPersonsInside = n;
+            System.out.println();
+            System.out.println("######");
+            System.out.println(s + " " + l + " " + n);
+            System.out.println("######");
+            System.out.println();   
         }
 
         public void setNumberOfPersonsInside(int n) {
@@ -170,10 +249,15 @@ public class Brain implements IObserver {
         public void setStatus(char s){
             status = s;
         }
+        public char getStatus(){
+            return status;
+        }
         public void setLocation(int f){
             location = f;
         }
-        
+        public int getLocation(){
+            return location;
+        }
         public void printData(){
             System.out.print("\nRegistered Elevator " + elevatorNumber);
             System.out.print("\n\t\tStatus : " + status + "\n\t\tlocation : " + location + "\n\t\tnumberOfPersonsInside : " + numberOfPersonsInside);

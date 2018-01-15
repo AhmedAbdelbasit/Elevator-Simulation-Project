@@ -17,17 +17,20 @@ import javafx.scene.layout.Pane;
  */
 
 public class PersonElevator extends Elevator {
+    
+    private PersonElevator me;
     private final int personsCapacity;
     private Pane guiElevator;
     private Thread elevatorMotor;
     private ArrayList<Integer> targetsFloor;
     private ArrayList<Integer> targetsY;
+    private int currentTarget;
     private int currentFloor = 0;
     private final int motionStep = 2;
     private final int delayTime = 75;
     
     public PersonElevator(Building B, int eNumber, int capacity){
-        
+        me = this;
         targetsY = new ArrayList();
         targetsFloor = new ArrayList();
                 
@@ -82,6 +85,7 @@ public class PersonElevator extends Elevator {
                                     System.out.println("Elevator at floor : " + f);
                                     setLocation(f);
                                     setStatus('d');
+                                    getParentBuilding().getBrain().update(me);
                                 }
     //                        System.out.println("Elevator at floor : " + getElevatorFloor(p+1));
                             // Case Up
@@ -98,13 +102,14 @@ public class PersonElevator extends Elevator {
                                     System.out.println("Elevator at floor : " + f);
                                     setLocation(f);
                                     setStatus('u');
+                                    getParentBuilding().getBrain().update(me);
                                 }
                             // Case Reached
                             }else{
                                 setStatus('s');
                                 getParentBuilding().getFloor(targetsFloor.get(0)).openDoor(getElevatorNumber());
                                 targetsY.remove(0);
-
+                                getParentBuilding().getBrain().update(me);
                             }
                             Thread.sleep(delayTime);
                         }
@@ -136,33 +141,82 @@ public class PersonElevator extends Elevator {
     
     public void addTarget(int f){
         int s = targetsFloor.size();
+        int rIndex = 0;
+        boolean SET = false;
+        
         if(s > 0){
-            if(targetsFloor.get(s - 1) != f){
-                targetsFloor.add(f);
-                Building b = getParentBuilding();
-                targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
-                if (elevatorMotor.isAlive()){
-                    System.out.println("Alive");
-                }else{
-                    System.out.println("Dead");
-        //            elevatorMotor.start();
-                    initiateThread();
-                    elevatorMotor.start();
+            for(int i=1 ; i<s ; i++){
+                if( (f<=targetsFloor.get(i) && f>=targetsFloor.get(i-1)) || (f>=targetsFloor.get(i) && f<=targetsFloor.get(i-1)) ){
+                    targetsFloor.add(i,f);
+                    SET = true;
+                    rIndex = i;
                 }
             }
-        }else{
+        }
+        
+        if(!SET){
+            rIndex = s;
             targetsFloor.add(f);
-            Building b = getParentBuilding();
+        }
+            
+        Building b = getParentBuilding();
+        if(rIndex >= targetsY.size()){
             targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+        }else{
+            targetsY.add(rIndex, 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+        }
+        
             if (elevatorMotor.isAlive()){
-                System.out.println("Alive");
-            }else{
-                System.out.println("Dead");
-    //            elevatorMotor.start();
-                initiateThread();
-                elevatorMotor.start();
+            System.out.println("Alive");
+        }else{
+            System.out.println("Dead");
+//            elevatorMotor.start();
+            initiateThread();
+            elevatorMotor.start();
+        }
+        
+        trimRequests();
+
+//            if(targetsFloor.get(s - 1) != f){
+//                targetsFloor.add(f);
+//                Building b = getParentBuilding();
+//                targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+//                if (elevatorMotor.isAlive()){
+//                    System.out.println("Alive");
+//                }else{
+//                    System.out.println("Dead");
+//        //            elevatorMotor.start();
+//                    initiateThread();
+//                    elevatorMotor.start();
+//                }
+//            }
+//        }
+//        else{
+//            targetsFloor.add(f);
+//            Building b = getParentBuilding();
+//            targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+//            if (elevatorMotor.isAlive()){
+//                System.out.println("Alive");
+//            }else{
+//                System.out.println("Dead");
+//    //            elevatorMotor.start();
+//                initiateThread();
+//                elevatorMotor.start();
+//            }
+//        }
+    }
+    
+    public void trimRequests(){
+        for(int i=1 ; i<targetsFloor.size() ; i++ ){
+            if(targetsFloor.get(i) == targetsFloor.get(i-1)){
+                targetsFloor.remove(i);
+                targetsY.remove(i);
             }
         }
+    }
+    
+    public ArrayList getRequestsList(){
+        return this.targetsFloor;
     }
     
 //    public void addTarget(int f){
