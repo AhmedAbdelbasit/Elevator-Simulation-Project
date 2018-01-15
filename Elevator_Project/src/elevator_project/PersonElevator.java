@@ -27,7 +27,7 @@ public class PersonElevator extends Elevator {
     private int currentTarget;
     private int currentFloor = 0;
     private final int motionStep = 2;
-    private final int delayTime = 75;
+    private final int delayTime = 50;
     
     public PersonElevator(Building B, int eNumber, int capacity){
         me = this;
@@ -69,8 +69,10 @@ public class PersonElevator extends Elevator {
                         System.out.print('.');
                         if((targetsY.size() == targetsFloor.size())){
                             double p = guiElevator.getLayoutY();
-                            double targetY = targetsY.get(0);
-
+                            double targetY = p;
+                            if(targetsY.size()>0){
+                                targetY = targetsY.get(0);
+                            }
                             // Case Down
                             if(targetY > p){
                                 if((targetY - p) >= motionStep){
@@ -106,10 +108,12 @@ public class PersonElevator extends Elevator {
                                 }
                             // Case Reached
                             }else{
-                                setStatus('s');
-                                getParentBuilding().getFloor(targetsFloor.get(0)).openDoor(getElevatorNumber());
-                                targetsY.remove(0);
-                                getParentBuilding().getBrain().update(me);
+                                if(targetsY.size() > 0){
+                                    setStatus('s');
+                                    getParentBuilding().getFloor(targetsFloor.get(0)).openDoor(getElevatorNumber());
+                                    targetsY.remove(0);
+                                    getParentBuilding().getBrain().update(me);
+                                }
                             }
                             Thread.sleep(delayTime);
                         }
@@ -144,13 +148,19 @@ public class PersonElevator extends Elevator {
         int rIndex = 0;
         boolean SET = false;
         
-        if(s > 0){
+        if(s > 1){
             for(int i=1 ; i<s ; i++){
                 if( (f<=targetsFloor.get(i) && f>=targetsFloor.get(i-1)) || (f>=targetsFloor.get(i) && f<=targetsFloor.get(i-1)) ){
                     targetsFloor.add(i,f);
                     SET = true;
                     rIndex = i;
                 }
+            }
+        }else if(s == 1){
+            if( (f<=targetsFloor.get(0) && f>=currentFloor) || (f>=targetsFloor.get(0) && f<=currentFloor) ){
+                rIndex = 0;
+                SET = true;
+                targetsFloor.add(0,f);
             }
         }
         
@@ -160,23 +170,39 @@ public class PersonElevator extends Elevator {
         }
             
         Building b = getParentBuilding();
-        if(rIndex >= targetsY.size()){
+        if(rIndex == s){
             targetsY.add( 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
         }else{
-            targetsY.add(rIndex, 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+            if(targetsY.size() == s){
+                targetsY.add(rIndex, 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+            }else if(targetsY.size() == 0){
+                targetsY.add(10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+            }else if(rIndex == 0){
+                targetsY.add(rIndex, 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+            }else{
+                targetsY.add(rIndex-1, 10+ ((b.getNumOfFloors() - f)*(b.getFloorHeight())) - b.getElevatorHeight() );
+            }
         }
         
-            if (elevatorMotor.isAlive()){
+        if (elevatorMotor.isAlive()){
             System.out.println("Alive");
         }else{
             System.out.println("Dead");
-//            elevatorMotor.start();
             initiateThread();
             elevatorMotor.start();
         }
         
         trimRequests();
-
+        System.out.println("#######");
+        System.out.println(targetsFloor.size());
+        System.out.println("#######");
+        System.out.println(targetsY.size());
+        System.out.println("#######");
+        for(int i=0 ; i<targetsY.size() ; i++){
+            System.out.print(targetsFloor.get(i) + " >> " + targetsY.get(i) + " ,, ");
+        }
+//        
+//        System.out.println("#######");
 //            if(targetsFloor.get(s - 1) != f){
 //                targetsFloor.add(f);
 //                Building b = getParentBuilding();
@@ -209,8 +235,13 @@ public class PersonElevator extends Elevator {
     public void trimRequests(){
         for(int i=1 ; i<targetsFloor.size() ; i++ ){
             if(targetsFloor.get(i) == targetsFloor.get(i-1)){
+                if(targetsFloor.size() == targetsY.size()){
+                    targetsY.remove(i);
+                }else{
+                    targetsY.remove(i-1);
+                }
                 targetsFloor.remove(i);
-                targetsY.remove(i);
+                
             }
         }
     }
