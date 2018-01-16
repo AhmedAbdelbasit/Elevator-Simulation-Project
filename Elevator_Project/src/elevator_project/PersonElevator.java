@@ -143,12 +143,12 @@ public class PersonElevator extends Elevator {
         return (10+(numOfFloors)*floorHeight-elevatorHeight);
     }
     
-    public void addTarget(int f){
+    public int addTarget(int f, int sInd){
         int s = targetsFloor.size();
         int rIndex = 0;
         boolean SET = false;
         
-        if(s > 1){
+        if(s > sInd){
             for(int i=1 ; i<s ; i++){
                 if( (f<=targetsFloor.get(i) && f>=targetsFloor.get(i-1)) || (f>=targetsFloor.get(i) && f<=targetsFloor.get(i-1)) ){
                     targetsFloor.add(i,f);
@@ -156,7 +156,7 @@ public class PersonElevator extends Elevator {
                     rIndex = i;
                 }
             }
-        }else if(s == 1){
+        }else if(s == 1 && sInd ==0){
             if( (f<=targetsFloor.get(0) && f>=currentFloor) || (f>=targetsFloor.get(0) && f<=currentFloor) ){
                 rIndex = 0;
                 SET = true;
@@ -201,6 +201,9 @@ public class PersonElevator extends Elevator {
         for(int i=0 ; i<targetsY.size() ; i++){
             System.out.print(targetsFloor.get(i) + " >> " + targetsY.get(i) + " ,, ");
         }
+        
+        return (rIndex+1);
+        
 //        
 //        System.out.println("#######");
 //            if(targetsFloor.get(s - 1) != f){

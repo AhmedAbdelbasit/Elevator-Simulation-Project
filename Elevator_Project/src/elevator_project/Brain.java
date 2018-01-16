@@ -55,8 +55,8 @@ public class Brain implements IObserver {
 //        }
 
         k.displayResponse(eNum);
-        ((PersonElevator)(k.getBuilding().getElevator(eNum))).addTarget(s);
-        ((PersonElevator)(k.getBuilding().getElevator(eNum))).addTarget(d);
+        int sIndex = ((PersonElevator)(k.getBuilding().getElevator(eNum))).addTarget(s,0);
+        sIndex = ((PersonElevator)(k.getBuilding().getElevator(eNum))).addTarget(d,sIndex);
         
 //        k.getBuilding().addElevatorTask(eNum, s);
 //        k.getBuilding().addElevatorTask(eNum, d);
